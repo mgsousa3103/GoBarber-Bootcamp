@@ -1,11 +1,8 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable space-before-function-paren */
 const express = require('express')
-const session = require('express-session')
-const FileStore = require('session-file-store')(session)
 const nunjucks = require('nunjucks')
 const path = require('path')
-const flash = require('connect-flash')
 
 class App {
   constructor() {
@@ -19,19 +16,6 @@ class App {
 
   middlewares() {
     this.express.use(express.urlencoded({ extended: false }))
-    this.express.use(flash())
-    // Cria sessão
-    this.express.use(
-      session({
-        name: 'root',
-        secret: 'MyAppSecret',
-        resave: true,
-        store: new FileStore({
-          path: path.resolve(__dirname, '..', 'tmp', 'sessions'),
-        }),
-        saveUninitialized: true,
-      })
-    )
   }
 
   views() {
@@ -40,6 +24,7 @@ class App {
       express: this.express,
       autoescape: true,
     })
+
     this.express.use(express.static(path.resolve(__dirname, 'public')))
     this.express.set('view engine', 'njk')
   }

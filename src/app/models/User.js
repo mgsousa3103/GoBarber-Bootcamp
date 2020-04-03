@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 const bcrypt = require('bcryptjs')
 
 module.exports = (sequelize, DataTypes) => {
@@ -9,24 +10,22 @@ module.exports = (sequelize, DataTypes) => {
       avatar: DataTypes.STRING,
       password: DataTypes.VIRTUAL,
       password_hash: DataTypes.STRING,
-      provider: DataTypes.BOOLEAN
+      provider: DataTypes.BOOLEAN,
     },
     {
       hooks: {
-        beforeSave: async user => {
+        beforeSave: async (user) => {
           if (user.password) {
             user.password_hash = await bcrypt.hash(user.password, 8)
           }
-        }
-      }
+        },
+      },
     }
   )
 
   User.prototype.checkPassword = function (password) {
     return bcrypt.compare(password, this.password_hash)
-    // eslint-disable-next-line semi
-  };
+  }
 
   return User
-  // eslint-disable-next-line semi
-};
+}
