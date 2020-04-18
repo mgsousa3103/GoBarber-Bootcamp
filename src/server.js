@@ -2,6 +2,8 @@
 /* eslint-disable space-before-function-paren */
 const express = require('express')
 const nunjucks = require('nunjucks')
+const session = require('express-session')
+const FileStore = require('session-file-store')(session)
 const path = require('path')
 
 class App {
@@ -16,6 +18,17 @@ class App {
 
   middlewares() {
     this.express.use(express.urlencoded({ extended: false }))
+    this.express.use(
+      session({
+        name: 'root',
+        secret: 'MyAppSecret',
+        resave: true,
+        store: new FileStore({
+          path: path.resolve(__dirname, '..', 'tmp', 'sessions'),
+        }),
+        saveUninitialized: true,
+      })
+    )
   }
 
   views() {
