@@ -21,9 +21,14 @@ class SessionController {
       return res.redirect('/')
     }
 
+    if (user.provider === true) {
+      req.session.user = user
+      return res.redirect('app/schedule')
+    }
+
     req.session.user = user
 
-    return res.redirect('/app/dashboard')
+    return res.redirect('app/dashboard')
   }
 
   destroy(req, res) {
